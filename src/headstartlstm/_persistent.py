@@ -82,9 +82,9 @@ extern "C" __global__ void lstm_persistent_fwd(
 
             float c_prev = c_sh[tid];
             float c_new = f * c_prev + i * g;
-            // tanh via fast __expf: tanh(x) = (e^{2x} - 1) / (e^{2x} + 1)
+            // tanh via fast __expf: tanh(x) = 1 - 2 / (e^{2x} + 1)
             float e2c = __expf(2.0f * c_new);
-            float tanh_c = (e2c - 1.0f) / (e2c + 1.0f);
+            float tanh_c = 1.0f - 2.0f / (e2c + 1.0f);
             float h_new = o * tanh_c;
 
             // save for backward

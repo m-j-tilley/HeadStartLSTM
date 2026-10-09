@@ -56,7 +56,7 @@ def _fused_cell_fwd_kernel(
     c_prev = tl.load(c_prev_ptr + pid_b * stride_state_b + h_offs * stride_state_h,
                      mask=h_mask, other=0.0).to(tl.float32)
     c_new = f * c_prev + i * g
-    tanh_c = (tl.exp(2.0 * c_new) - 1.0) / (tl.exp(2.0 * c_new) + 1.0)  # stable tanh via exp
+    tanh_c = 1.0 - 2.0 / (tl.exp(2.0 * c_new) + 1.0)  # stable tanh via exp
     h_new = o * tanh_c
 
     # Cast back to the output dtype on store (Triton infers from ptr dtype).
